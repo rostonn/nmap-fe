@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import simpleReducer from './simpleReducer';
+import nmapReducer from './nmapReducer';
 export default combineReducers({
- simpleReducer
+ nmapReducer
 });

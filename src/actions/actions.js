@@ -2,18 +2,15 @@ import 'cross-fetch/polyfill'
 
 const apiUrl = process.env.REACT_APP_API_URL
 
-export const simpleAction = () => dispatch => {
-    dispatch({
-        type: 'SIMPLE_ACTION',
-        payload: 'result_of_simple_action'
-    })
+export const clearNmapResults = () => {
+    return {
+        type: 'CLEAR_RESULTS'
+    }
 }
 
 export const fetchNmapResults = (ipAddress) => {
 
     return dispatch => {
-        console.log("Dispatching actions....")
-        console.log(apiUrl)
         var options = {
             method: 'POST',
             headers: {
@@ -24,14 +21,15 @@ export const fetchNmapResults = (ipAddress) => {
             })
         }
         return fetch(apiUrl, options).then(response => response.json())
-            .then(json => dispatch(nmapResultsReceived(json)))
+            .then(json => dispatch(nmapResultsReceived(json, ipAddress)))
             .catch(error => dispatch(fetchNmapResultsError(error)))
     }
 }
 
-export const nmapResultsReceived = (json) => {
-    console.log("Nmap results recieved...")
-    console.log(json);
+export const nmapResultsReceived = (json, ipAddress) => {
+    if(json.length === 0) {
+        alert('NO Results for ' + ipAddress)
+    }
     return {
         type: 'RECEIVED_NMAP_RESULTS',
         results: json
@@ -41,6 +39,7 @@ export const nmapResultsReceived = (json) => {
 export const fetchNmapResultsError = (error) => {
     console.log("Error recieved ....")
     console.log(error)
+    alert('Error Fetching Nmap Results')
     return {
         type: 'NMAP_FETCH_ERROR'
     }

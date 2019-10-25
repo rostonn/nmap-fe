@@ -1,37 +1,35 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import NmapTable from './NmapTable.js'
-import { simpleAction, fetchNmapResults } from './actions/actions.js'
+import { fetchNmapResults, clearNmapResults } from './actions/actions.js'
 
 export class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {ipAddress: ''};
-
+    this.state = { ipAddress: '' };
     this.handleChange = this.handleChange.bind(this);
-
   }
 
   handleChange(event) {
-    console.log(event)
-    this.setState({ipAddress: event.target.value});
+    this.setState({ ipAddress: event.target.value });
   }
 
   render() {
     return (
       <div>
-        <h1>Hello World Redux</h1>
-        <h1>Hello World Redux11</h1>
-        <p>{this.props.simpleReducer.test}</p>
+        <h1>NMAP Results Viewer</h1>
+        <p>Enter IP Address and click Search IP to view results</p>
+        <p>Try 189.129.7.43</p>
         <label>
           IP Address:
           <input type="text" value={this.state.ipAddress} onChange={this.handleChange} />
         </label>
-        <input type="submit" value="Search IP" onClick={() => {this.props.fetchNmapResults(this.state.ipAddress)}}/>
+        <input type="submit" value="Search IP" onClick={() => { this.props.fetchNmapResults(this.state.ipAddress) }} />
+        <button value="Clear Results" onClick={() => this.props.clearNmapResults()}>Clear</button>
 
-    { this.props.simpleReducer.nmapData.length > 0 && <NmapTable/> }
-
-
+        {this.props.nmapReducer.nmapData.length > 0 &&
+          <NmapTable data={this.props.nmapReducer.nmapData}/>
+        }
       </div>
     );
   }
@@ -39,12 +37,12 @@ export class App extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  simpleAction: () => dispatch(simpleAction()),
-  fetchNmapResults: (ipAddress) => dispatch(fetchNmapResults(ipAddress))
- })
+  fetchNmapResults: (ipAddress) => dispatch(fetchNmapResults(ipAddress)),
+  clearNmapResults: () => dispatch(clearNmapResults())
+})
 
 const mapStateToProps = state => ({
   ...state
- })
+})
 
- export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
